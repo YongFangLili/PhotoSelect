@@ -42,10 +42,8 @@
 }
 - (void)clickSelctButton:(UIButton *)button {
     
-    button.selected = !button.selected;
-    self.model.selected = button.selected;
-    if (self.delegate && [self.delegate respondsToSelector:@selector(didClickSelectButton:)]) {
-        [self.delegate didClickSelectButton:button];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didClickSelectButton:model:)]) {
+        [self.delegate didClickSelectButton:button model:self.model];
     }
 
 }
@@ -53,6 +51,19 @@
 - (void)setModel:(LBPhotoPickerModel *)model {
     
     _model = model;
+    if (model.selected) {
+        self.selectButton.selected = YES;
+        self.selectButton.backgroundColor = [UIColor redColor];
+        [self.selectButton setTitle:[NSString stringWithFormat:@"%zd",model.upLoadIndex] forState:UIControlStateNormal];
+        
+    }else{
+        
+        self.selectButton.selected = NO;
+        self.selectButton.backgroundColor = [UIColor grayColor];
+         [self.selectButton setTitle:@"" forState:UIControlStateNormal];
+        _model.upLoadIndex = 0;
+    }
+    
     if (model.thumail) {
         self.photoImageView.image = model.thumail;
     }else {

@@ -40,6 +40,7 @@
 
 - (void)initDate {
     
+    [self.upLoadTipArray removeAllObjects];
     for (int i = 0; i < 5; i ++) {
         LBPhotoSelectTipModel *model = [[LBPhotoSelectTipModel alloc] init];
         model.upLoadIndex = i + 1;
@@ -89,7 +90,8 @@
     
     // 跳转
     LBPhotoListViewController *lbListVC = [[LBPhotoListViewController alloc] init];
-    lbListVC.upLoadTipArray = lbListVC.upLoadTipArray;
+    [self initDate];
+    lbListVC.upLoadTipArray = self.upLoadTipArray;
     [self.navigationController pushViewController:lbListVC animated:YES];
 }
 

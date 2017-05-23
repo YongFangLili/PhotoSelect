@@ -23,4 +23,7 @@
 /** 是否选中 */
 @property (nonatomic, assign) BOOL selected;
 
+/** 长传的 index */
+@property (nonatomic, assign) NSInteger upLoadIndex;
+
 @end

@@ -14,7 +14,7 @@
 /**
  * @brief 点击选中按钮状态
  */
-- (void)didClickSelectButton:(UIButton *)button;
+- (void)didClickSelectButton:(UIButton *)button model:(LBPhotoPickerModel *)model;
 
 @end
 

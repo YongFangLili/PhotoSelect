@@ -72,6 +72,7 @@ static NSString *lbPhotoListViewCellID = @"LBPhotoListViewCellID";
     LBPhotoPickerController *photoPickerVC = [[LBPhotoPickerController alloc] init];
     LBPhotoListModel *listModel = self.photoArray[indexPath.row];
     photoPickerVC.dataArray =  listModel.photoPickerArray;
+    photoPickerVC.upLoadTipArray = self.upLoadTipArray;
     photoPickerVC.title = listModel.albumName;
     [self.navigationController pushViewController:photoPickerVC animated:YES];
 }

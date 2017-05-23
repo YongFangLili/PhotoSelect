@@ -59,29 +59,33 @@ UICollectionViewDelegate
     return cell;
 }
 
-- (void)didClickSelectButton:(UIButton *)button {
+- (void)didClickSelectButton:(UIButton *)button model:(LBPhotoPickerModel *)model{
     
     // 处理button 按钮
     
     button.selected = !button.selected;
     for (int i = 0; i < self.upLoadTipArray.count; i ++) {
+        
+        LBPhotoSelectTipModel *tipModel = self.upLoadTipArray[i];
         if (button.selected) {
             // 遍历未被选中的
-            LBPhotoSelectTipModel *tipModel = self.upLoadTipArray[i];
             if (!tipModel.isSelected) {
                 tipModel.isSelected = YES;
                 [button setTitle:[NSString stringWithFormat:@"%zd",tipModel.upLoadIndex] forState:UIControlStateNormal];
                 button.backgroundColor = [UIColor redColor];
+                model.selected = YES;
+                model.upLoadIndex = tipModel.upLoadIndex;
                 break;
-            }else {
-                
-                // 找到序号一样并且没有被选中的
-                if ([button.titleLabel.text isEqualToString:[NSString stringWithFormat:@"%zd",tipModel.upLoadIndex]]) {
-                    tipModel.isSelected = NO;
-                    [button setTitle:@""forState:UIControlStateNormal];
-                    button.backgroundColor = [UIColor grayColor];
-                }
+            }
+        }else {
             
+            // 找到序号一样并且没有被选中的
+            if ([button.titleLabel.text isEqualToString:[NSString stringWithFormat:@"%zd",tipModel.upLoadIndex]]) {
+                tipModel.isSelected = NO;
+                [button setTitle:@""forState:UIControlStateNormal];
+                button.backgroundColor = [UIColor grayColor];
+                model.selected = NO;
+                model.upLoadIndex = 0;
             }
            
         }
