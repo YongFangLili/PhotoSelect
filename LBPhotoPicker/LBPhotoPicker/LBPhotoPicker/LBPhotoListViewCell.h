@@ -14,4 +14,6 @@
 /** 模型 */
 @property (nonatomic, strong) LBPhotoListModel *model;
 
+
+
 @end

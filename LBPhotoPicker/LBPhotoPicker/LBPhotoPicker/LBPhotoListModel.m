@@ -11,15 +11,22 @@
 @implementation LBPhotoListModel
 
 
-- (NSMutableArray *)photoArray {
+- (NSMutableArray *)photoPickerArray {
     
-    if (!_photoArray) {
-        _photoArray = [NSMutableArray array];
+    if (!_photoPickerArray) {
+        _photoPickerArray = [NSMutableArray array];
     }
     
-    return _photoArray;
+    return _photoPickerArray;
 }
 
+- (NSMutableArray *)upLoadTipArray {
+    
+    if (!_upLoadTipArray) {
+        _upLoadTipArray = [NSMutableArray array];
+    }
+    return _upLoadTipArray;
+}
 
 
 @end

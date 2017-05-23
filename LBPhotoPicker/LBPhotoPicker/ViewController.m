@@ -14,6 +14,7 @@
 #import "LBPhotoListModel.h"
 #import "LBPhotoPickerModel.h"
 #import "LBPhotoListViewController.h"
+#import "LBPhotoSelectTipModel.h"
 
 @interface ViewController ()<UIAlertViewDelegate>
 
@@ -21,14 +22,30 @@
 
 @property (nonatomic, strong) NSMutableArray *photoListArrary;
 
+/** 上传提示数组  这部分需要外界控制*/
+@property (nonatomic, strong) NSMutableArray *upLoadTipArray;
+
 @end
 
 @implementation ViewController
 
 - (void)viewDidLoad {
+    
     [super viewDidLoad];
     [self.view addSubview:self.selectButton];
     self.selectButton.frame = CGRectMake(100, 100, 100, 100);
+    [self initDate];
+
+}
+
+- (void)initDate {
+    
+    for (int i = 0; i < 5; i ++) {
+        LBPhotoSelectTipModel *model = [[LBPhotoSelectTipModel alloc] init];
+        model.upLoadIndex = i + 1;
+        model.tipText = [NSString stringWithFormat:@"请上传证件照 %zd",i + 1];
+        [self.upLoadTipArray addObject:model];
+    }
 }
 
 
@@ -72,136 +89,10 @@
     
     // 跳转
     LBPhotoListViewController *lbListVC = [[LBPhotoListViewController alloc] init];
+    lbListVC.upLoadTipArray = lbListVC.upLoadTipArray;
     [self.navigationController pushViewController:lbListVC animated:YES];
 }
 
-- (void)addAlbumResourceOther {
-
-    // 获取用户自定义相册
-    PHFetchResult *collections = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
-    // 获取系统相册
-    PHFetchResult *customCollections = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-    
-        // 遍历系统相册
-        for (PHAssetCollection *collection in collections) {
-            [self enumerCollection:collection];
-        }
-        
-        for (PHAssetCollection *collection in customCollections) {
-            [self enumerCollection:collection];
-        }
-    });
-    
-    // 将相机胶卷放到第一位
-    if (self.photoListArrary && self.photoListArrary.count > 0) {
-        
-        
-        for (LBPhotoListModel *listModel in self.photoListArrary) {
-            
-            if ([listModel.albumName isEqualToString:@"相机胶卷"]) {
-                [self.photoListArrary insertObject:listModel atIndex:0];
-            }
-        }
-    }
-    
-   
-}
-
-/**
- *  遍历相册资源
- */
-- (void)enumerCollection:(PHAssetCollection *)collection {
-    
-    PHFetchOptions *option = [[PHFetchOptions alloc]init];
-    option.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"modificationDate" ascending:NO]];
-    PHFetchResult *assets = [PHAsset fetchAssetsInAssetCollection:collection options:option];
-    
-    NSMutableArray *tempPhotoImageArray = [NSMutableArray array];
-    NSMutableArray *tempVideoImageArray = [NSMutableArray array];
-    
-    PHImageRequestOptions *options = [[PHImageRequestOptions alloc]init];
-    options.synchronous = YES;
-    options.resizeMode = PHImageRequestOptionsResizeModeExact;
-    options.deliveryMode = PHImageRequestOptionsDeliveryModeFastFormat;
-    
-    if ([assets count] > 0) {
-        
-        NSInteger pictureNum = 0;
-        
-        LBPhotoListModel *model = [[LBPhotoListModel alloc] init];
-        
-        for (PHAsset * asset in assets) {
-            // 相册名字
-            NSString * photoName =[asset valueForKey:@"filename"];
-            // 扩展名
-            NSString * extrendName = [[photoName componentsSeparatedByString:@"."] lastObject];
-            // 判断照片和视频
-            if (asset.mediaType == PHAssetMediaTypeImage) {
-                //  照片
-                pictureNum++;
-                LBPhotoPickerModel *picMode = [[LBPhotoPickerModel alloc] init];
-                picMode.PHAsset = asset;
-                [model.photoArray addObject:picMode];
-//                NSDictionary * imageDic = @{@"PHAsset":asset,
-//                                            @"isPhoto":@(1),
-//                                            @"albumName":collection.localizedTitle,
-//                                            @"stringMediaName":photoName,
-//                                            @"extendName":extrendName};
-//                
-//                MDPMediaSourceModel * model = [MDPMediaSourceModel initWithDictionary:imageDic];
-//                [tempPhotoImageArray addObject:model];
-                
-            }
-            
-            model.pictureNumber  = [NSString stringWithFormat:@"%zd",pictureNum];
-        }
-       
-       
-        // 获取封面
-        if (model.photoArray.count > 0) {
-            
-           [[PHImageManager defaultManager] requestImageForAsset:[[model.photoArray firstObject] PHAsset] targetSize:CGSizeMake(100, 100) contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-               model.albumName = collection.localizedTitle;
-               model.coverImage = result;
-           }];
-         [self.photoListArrary addObject:model];
-        }
-        
-        
-        
-        
-//        if (tempPhotoImageArray && tempPhotoImageArray.count >0) {
-//            /// 添加图片相册的封面属性，数量等.
-//            [[PHImageManager defaultManager]requestImageForAsset:[[tempPhotoImageArray firstObject] PHAsset] targetSize:CGSizeMake(100, 100) contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-                /**
-                 *
-                 *  @param      albumName --->相册名字.
-                 *  @param      postImage --->相册封面.
-                 *  @param      pictureNumber --->相册图片数目.
-                 *  @param      hasSelected ----->是否有选中的资源.
-                 *
-                 */
-                
-//                MDPMediaClassifyModel * model = [[MDPMediaClassifyModel alloc] init];
-//                model.albumName = collection.localizedTitle;
-//                model.assetCollectionSubtype = [NSString stringWithFormat:@"%zd",collection.assetCollectionSubtype];
-//                model.postImage = result;
-//                model.pictureNumber = [tempPhotoImageArray count];
-//                model.hasSelected = NO;
-                
-//                [self.albumNamePictureArray addObject:model];
-//            }];
-        
-//            [self.photoImageArray addObject:tempPhotoImageArray];
-//        }
-    
-        if (collection.assetCollectionSubtype == PHAssetCollectionSubtypeSmartAlbumUserLibrary) {
-            
-//            self.allPhotoArray = tempPhotoImageArray;
-        }
-    }
-}
 
 
 
@@ -226,6 +117,16 @@
         _photoListArrary = [NSMutableArray array];
     }
     return _photoListArrary;
+}
+
+- (NSMutableArray *)upLoadTipArray {
+    
+    if (!_upLoadTipArray) {
+        _upLoadTipArray = [NSMutableArray array];
+    }
+    
+    return _upLoadTipArray;
+
 }
 
 

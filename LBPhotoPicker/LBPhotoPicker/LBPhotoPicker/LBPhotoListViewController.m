@@ -12,6 +12,7 @@
 #import "LBPhotoListModel.h"
 #import "LBPhotoPickerModel.h"
 #import "LBPhotoListViewController.h"
+#import "LBPhotoPickerController.h"
 
 static NSString *lbPhotoListViewCellID = @"LBPhotoListViewCellID";
 
@@ -62,8 +63,17 @@ static NSString *lbPhotoListViewCellID = @"LBPhotoListViewCellID";
     if (self.photoArray.count == 0) {
         return 0;
     }
-    
     return 86;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    LBPhotoPickerController *photoPickerVC = [[LBPhotoPickerController alloc] init];
+    LBPhotoListModel *listModel = self.photoArray[indexPath.row];
+    photoPickerVC.dataArray =  listModel.photoPickerArray;
+    photoPickerVC.title = listModel.albumName;
+    [self.navigationController pushViewController:photoPickerVC animated:YES];
 }
 
 
@@ -147,7 +157,7 @@ static NSString *lbPhotoListViewCellID = @"LBPhotoListViewCellID";
                 pictureNum++;
                 LBPhotoPickerModel *picMode = [[LBPhotoPickerModel alloc] init];
                 picMode.PHAsset = asset;
-                [model.photoArray addObject:picMode];
+                [model.photoPickerArray addObject:picMode];
                 //                NSDictionary * imageDic = @{@"PHAsset":asset,
                 //                                            @"isPhoto":@(1),
                 //                                            @"albumName":collection.localizedTitle,
@@ -164,9 +174,9 @@ static NSString *lbPhotoListViewCellID = @"LBPhotoListViewCellID";
         
         
         // 获取封面
-        if (model.photoArray.count > 0) {
+        if (model.photoPickerArray.count > 0) {
             
-            [[PHImageManager defaultManager] requestImageForAsset:[[model.photoArray firstObject] PHAsset] targetSize:CGSizeMake(100, 100) contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+            [[PHImageManager defaultManager] requestImageForAsset:[[model.photoPickerArray firstObject] PHAsset] targetSize:CGSizeMake(100, 100) contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
                 model.albumName = collection.localizedTitle;
                 model.coverImage = result;
             }];
@@ -223,15 +233,8 @@ static NSString *lbPhotoListViewCellID = @"LBPhotoListViewCellID";
     }else {
         
         // 跳转
-        
-        
     }
-    
 }
-
-
-
-
 
 - (UITableView *)photoListTableView {
     
@@ -242,18 +245,23 @@ static NSString *lbPhotoListViewCellID = @"LBPhotoListViewCellID";
         [_photoListTableView registerClass:[LBPhotoListViewCell class] forCellReuseIdentifier:lbPhotoListViewCellID];
         _photoListTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     }
-                                                                            
     return _photoListTableView;
 }
-
 
 - (NSMutableArray *)photoArray {
     
     if (!_photoArray) {
         _photoArray = [NSMutableArray array];
     }
-
     return _photoArray;
+}
+
+- (NSMutableArray *)upLoadTipArray {
+
+    if (!_upLoadTipArray) {
+        _upLoadTipArray = [NSMutableArray array];
+    }
+    return _upLoadTipArray;
 }
 
 - (void)didReceiveMemoryWarning {

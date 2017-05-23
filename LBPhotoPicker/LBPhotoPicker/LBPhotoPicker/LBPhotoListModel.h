@@ -21,7 +21,10 @@
 @property (nonatomic, copy) NSString *pictureNumber;
 /** 是否选中*/
 @property (nonatomic, assign) BOOL hasSelected;
+/** 相册里的照片数组 */
+@property (nonatomic, strong) NSMutableArray *photoPickerArray;
+/** 提示数组 */
+@property (nonatomic, strong) NSMutableArray *upLoadTipArray;
 
-@property (nonatomic, strong) NSMutableArray *photoArray;
 
 @end

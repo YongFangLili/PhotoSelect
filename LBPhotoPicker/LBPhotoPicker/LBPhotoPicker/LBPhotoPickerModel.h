@@ -17,4 +17,10 @@
 /* 相册名称**/
 @property (nonatomic,strong) NSString *albumName;
 
+/** 缩略图 */
+@property (nonatomic, strong) UIImage *thumail;
+
+/** 是否选中 */
+@property (nonatomic, assign) BOOL selected;
+
 @end
