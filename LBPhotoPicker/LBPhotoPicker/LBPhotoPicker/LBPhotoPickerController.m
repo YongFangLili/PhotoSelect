@@ -32,6 +32,10 @@ UICollectionViewDelegate
 /** 提示label */
 @property (nonatomic, strong) UILabel *tipLble;
 
+@property (nonatomic, strong) LBPhotoSelectTipModel *nextTipModel;
+
+@property (nonatomic, strong) NSMutableArray *selectedArray;
+
 @end
 
 @implementation LBPhotoPickerController
@@ -49,6 +53,7 @@ UICollectionViewDelegate
     self.tipLble.frame = CGRectMake(0,[UIScreen mainScreen].bounds.size.height - 60 - 40 , [UIScreen mainScreen].bounds.size.width, 40);
     self.nextTipBtn.frame = CGRectMake(20, [UIScreen mainScreen].bounds.size.height -10 - 30 , [UIScreen mainScreen].bounds.size.width - 40, 30);
     self.photoCollectionView.frame = CGRectMake(0, 64, PHONE_WIDTH,CGRectGetMinY(self.tipLble.frame) - 64);
+    [self updateTipText];
     
 }
 
@@ -72,9 +77,26 @@ UICollectionViewDelegate
 
 - (void)didClickSelectButton:(UIButton *)button model:(LBPhotoPickerModel *)model{
     
-    // 处理button 按钮
-    
+//    // 处理button 按钮
     button.selected = !button.selected;
+//    if (button.selected) { // 选中了，选择图片
+//        self.nextTipModel.isSelected = YES;
+//        model.selected = YES;
+//        model.upLoadIndex = self.nextTipModel.upLoadIndex;
+//        [button setTitle:[NSString stringWithFormat:@"%zd",self.nextTipModel.upLoadIndex] forState:UIControlStateNormal];
+//        button.backgroundColor = [UIColor redColor];
+//        [self.selectedArray addObject:self.nextTipModel];
+//    }else { // 取消选中
+//        
+//        model.selected = NO;
+//        model.upLoadIndex =
+//        
+//        
+//        
+//        
+//    
+//    }
+    
     for (int i = 0; i < self.upLoadTipArray.count; i ++) {
         
         LBPhotoSelectTipModel *tipModel = self.upLoadTipArray[i];
@@ -84,8 +106,11 @@ UICollectionViewDelegate
                 tipModel.isSelected = YES;
                 [button setTitle:[NSString stringWithFormat:@"%zd",tipModel.upLoadIndex] forState:UIControlStateNormal];
                 button.backgroundColor = [UIColor redColor];
-//                model.selected = YES;
-//                model.upLoadIndex = tipModel.upLoadIndex;
+                model.selected = YES;
+                model.upLoadIndex = tipModel.upLoadIndex;
+                [self.selectedArray addObject:model];
+                // 刷新一下显示
+                [self updateTipText];
                 break;
             }
         }else {
@@ -93,17 +118,42 @@ UICollectionViewDelegate
             // 找到序号一样并且没有被选中的
             if ([button.titleLabel.text isEqualToString:[NSString stringWithFormat:@"%zd",tipModel.upLoadIndex]]) {
                 tipModel.isSelected = NO;
+                model.upLoadIndex = tipModel.upLoadIndex;
+                if (self.selectedArray.count > 0 && [self.selectedArray containsObject:model]) {
+                    [self.selectedArray removeObject:model];
+                }
                 [button setTitle:@""forState:UIControlStateNormal];
                 button.backgroundColor = [UIColor grayColor];
-//                model.selected = NO;
-//                model.upLoadIndex = 0;
+                // 刷新一下显示
+                [self updateTipText];
+                break;
             }
-           
         }
     }
-    
-    
     // 处理提示信息
+}
+
+- (void)updateTipText {
+    
+    if (self.upLoadTipArray.count > 0) {
+        for (int i = 0; i < self.upLoadTipArray.count; i++ ) {
+            
+            LBPhotoSelectTipModel *tipMode = self.upLoadTipArray [i];
+            
+            if (tipMode.isSelected == NO) {
+                self.nextTipModel = tipMode;
+                self.tipLble.text = [NSString stringWithFormat:@"请选择%@",tipMode.tipText];
+                if (self.selectedArray.count == 0) {
+                    self.nextTipBtn.enabled = NO;
+                }else{
+                    self.nextTipBtn.enabled = YES;
+                }
+                [self.nextTipBtn setTitle:[NSString stringWithFormat:@"下一步(%zd/%zd)",self.selectedArray.count,self.upLoadTipArray.count] forState:UIControlStateNormal];
+                break;
+                
+            }
+        }
+    }
 
 
 }
@@ -160,6 +210,14 @@ UICollectionViewDelegate
         _upLoadTipArray = [NSMutableArray array];
     }
     return _upLoadTipArray;
+}
+
+- (NSMutableArray *)selectedArray {
+    
+    if (!_selectedArray) {
+        _selectedArray = [NSMutableArray array];
+    }
+    return _selectedArray;
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
