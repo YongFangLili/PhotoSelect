@@ -13,12 +13,18 @@
 #import "LBPhotoPickerModel.h"
 #import "LBPhotoListViewController.h"
 #import "LBPhotoPickerController.h"
+#import "LBPhotoSelectTipModel.h"
+#import "LBPhotoPickerModel.h"
 
 static NSString *lbPhotoListViewCellID = @"LBPhotoListViewCellID";
 
 @interface LBPhotoListViewController () <UITableViewDelegate, UITableViewDataSource>
 /* 相册列表 **/
 @property (nonatomic, strong) UITableView *photoListTableView;
+
+/** 所选的照片数组 */
+@property (nonatomic, strong) NSMutableArray *upLoadPhotoModelArrary;
+
 
 
 
@@ -32,11 +38,24 @@ static NSString *lbPhotoListViewCellID = @"LBPhotoListViewCellID";
     self.view.backgroundColor = [UIColor whiteColor];
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self.view addSubview:self.photoListTableView];
-    self.photoListTableView.frame = CGRectMake(0, 64, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - 64);
+
     self.title = @"相簿";
     [self checkPermissionForPhotoLibrary];
+    self.photoListTableView.frame = CGRectMake(0, 64, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - 64);
 }
 
+
+- (void)initDate {
+    
+    [self.upLoadPhotoModelArrary removeAllObjects];
+    for (int i = 0; i < 5; i ++) {
+        LBPhotoSelectTipModel *model = [[LBPhotoSelectTipModel alloc] init];
+        model.upLoadIndex = i + 1;
+        model.tipText = self.upLoadTipArray[i];
+        model.isSelected = NO;
+        [self.upLoadPhotoModelArrary addObject:model];
+    }
+}
 
 #pragma mark - UITableViewDelegate, UITableViewDataSource
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
@@ -72,7 +91,9 @@ static NSString *lbPhotoListViewCellID = @"LBPhotoListViewCellID";
     LBPhotoPickerController *photoPickerVC = [[LBPhotoPickerController alloc] init];
     LBPhotoListModel *listModel = self.photoArray[indexPath.row];
     photoPickerVC.dataArray =  listModel.photoPickerArray;
-    photoPickerVC.upLoadTipArray = self.upLoadTipArray;
+    [self initDate];
+    photoPickerVC.upLoadTipArray = self.upLoadPhotoModelArrary;
+    
     photoPickerVC.title = listModel.albumName;
     [self.navigationController pushViewController:photoPickerVC animated:YES];
 }
@@ -249,6 +270,7 @@ static NSString *lbPhotoListViewCellID = @"LBPhotoListViewCellID";
     return _photoListTableView;
 }
 
+
 - (NSMutableArray *)photoArray {
     
     if (!_photoArray) {
@@ -264,6 +286,15 @@ static NSString *lbPhotoListViewCellID = @"LBPhotoListViewCellID";
     }
     return _upLoadTipArray;
 }
+
+- (NSMutableArray *)upLoadPhotoModelArrary {
+
+    if (!_upLoadPhotoModelArrary) {
+        _upLoadPhotoModelArrary = [NSMutableArray array];
+    }
+    return _upLoadPhotoModelArrary;
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

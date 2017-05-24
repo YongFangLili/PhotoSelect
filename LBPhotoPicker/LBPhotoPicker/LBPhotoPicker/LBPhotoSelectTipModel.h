@@ -19,4 +19,6 @@
 /** 是否已经选中 */
 @property (nonatomic, assign) BOOL isSelected;
 
+
+
 @end

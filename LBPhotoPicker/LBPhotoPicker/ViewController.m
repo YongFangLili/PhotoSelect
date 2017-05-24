@@ -42,10 +42,11 @@
     
     [self.upLoadTipArray removeAllObjects];
     for (int i = 0; i < 5; i ++) {
-        LBPhotoSelectTipModel *model = [[LBPhotoSelectTipModel alloc] init];
-        model.upLoadIndex = i + 1;
-        model.tipText = [NSString stringWithFormat:@"请上传证件照 %zd",i + 1];
-        [self.upLoadTipArray addObject:model];
+        
+//        LBPhotoSelectTipModel *model = [[LBPhotoSelectTipModel alloc] init];
+//        model.upLoadIndex = i + 1;
+        NSString *tipString = [NSString stringWithFormat:@"请上传证件照 %zd",i + 1];
+        [self.upLoadTipArray addObject:tipString];
     }
 }
 
@@ -90,7 +91,7 @@
     
     // 跳转
     LBPhotoListViewController *lbListVC = [[LBPhotoListViewController alloc] init];
-    [self initDate];
+//    [self initDate];
     lbListVC.upLoadTipArray = self.upLoadTipArray;
     [self.navigationController pushViewController:lbListVC animated:YES];
 }

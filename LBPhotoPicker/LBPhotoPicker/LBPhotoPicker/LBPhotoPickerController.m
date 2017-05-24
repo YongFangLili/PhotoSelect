@@ -27,6 +27,11 @@ UICollectionViewDelegate
 /* 图片列表 **/
 @property (nonatomic, strong) UICollectionView *photoCollectionView;
 
+/** 下一步按钮 */
+@property (nonatomic, strong) UIButton *nextTipBtn;
+/** 提示label */
+@property (nonatomic, strong) UILabel *tipLble;
+
 @end
 
 @implementation LBPhotoPickerController
@@ -38,6 +43,12 @@ UICollectionViewDelegate
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.photoCollectionView];
+    [self.view addSubview:self.tipLble];
+    [self.view addSubview:self.nextTipBtn];
+    
+    self.tipLble.frame = CGRectMake(0,[UIScreen mainScreen].bounds.size.height - 60 - 40 , [UIScreen mainScreen].bounds.size.width, 40);
+    self.nextTipBtn.frame = CGRectMake(20, [UIScreen mainScreen].bounds.size.height -10 - 30 , [UIScreen mainScreen].bounds.size.width - 40, 30);
+    self.photoCollectionView.frame = CGRectMake(0, 64, PHONE_WIDTH,CGRectGetMinY(self.tipLble.frame) - 64);
     
 }
 
@@ -73,8 +84,8 @@ UICollectionViewDelegate
                 tipModel.isSelected = YES;
                 [button setTitle:[NSString stringWithFormat:@"%zd",tipModel.upLoadIndex] forState:UIControlStateNormal];
                 button.backgroundColor = [UIColor redColor];
-                model.selected = YES;
-                model.upLoadIndex = tipModel.upLoadIndex;
+//                model.selected = YES;
+//                model.upLoadIndex = tipModel.upLoadIndex;
                 break;
             }
         }else {
@@ -84,8 +95,8 @@ UICollectionViewDelegate
                 tipModel.isSelected = NO;
                 [button setTitle:@""forState:UIControlStateNormal];
                 button.backgroundColor = [UIColor grayColor];
-                model.selected = NO;
-                model.upLoadIndex = 0;
+//                model.selected = NO;
+//                model.upLoadIndex = 0;
             }
            
         }
@@ -122,6 +133,26 @@ UICollectionViewDelegate
     }
     return _photoCollectionView;
 }
+
+- (UIButton *)nextTipBtn {
+    
+    if (!_nextTipBtn) {
+        _nextTipBtn = [[UIButton alloc] init];
+        _nextTipBtn.backgroundColor = [UIColor redColor];
+        
+    }
+    return _nextTipBtn;
+}
+
+- (UILabel *)tipLble {
+    
+    if (!_tipLble) {
+        _tipLble = [[UILabel alloc] init];
+        _tipLble.backgroundColor = [UIColor grayColor];
+    }
+    return _tipLble;
+}
+
 
 - (NSMutableArray *)upLoadTipArray {
     
