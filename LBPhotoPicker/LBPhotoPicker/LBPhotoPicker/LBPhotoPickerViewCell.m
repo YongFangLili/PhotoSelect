@@ -63,15 +63,15 @@
 //         [self.selectButton setTitle:@"" forState:UIControlStateNormal];
 //        _model.upLoadIndex = 0;
 //    }
+    //创建options
+    PHImageRequestOptions *options = [[PHImageRequestOptions alloc]init];
+    options.synchronous = NO;
+    options.resizeMode = PHImageRequestOptionsResizeModeExact;
+    options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
     if (model.thumail) {
         self.photoImageView.image = model.thumail;
     }else {
         
-        //创建options
-        PHImageRequestOptions *options = [[PHImageRequestOptions alloc]init];
-        options.synchronous = NO;
-        options.resizeMode = PHImageRequestOptionsResizeModeExact;
-        options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
         
         [[PHCachingImageManager defaultManager]requestImageForAsset:model.PHAsset targetSize:CGSizeMake(160, 160) contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -81,6 +81,15 @@
         }];
     }
     
+    if (!model.originalImage) {
+        
+        [[PHImageManager defaultManager]requestImageForAsset:model.PHAsset targetSize:CGSizeMake(model.PHAsset.pixelWidth, model.PHAsset.pixelHeight) contentMode:PHImageContentModeAspectFit options:options resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+            dispatch_async(dispatch_get_global_queue(0, 0), ^{
+                
+                model.originalImage = result;
+            });
+        }];
+    }
 }
 
 

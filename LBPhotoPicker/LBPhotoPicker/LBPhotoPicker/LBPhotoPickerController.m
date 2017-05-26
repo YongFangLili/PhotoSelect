@@ -9,6 +9,7 @@
 #import "LBPhotoPickerController.h"
 #import "LBPhotoPickerViewCell.h"
 #import "LBPhotoSelectTipModel.h"
+#import "LBPhotoPickerDetailController.h"
 
 /// 屏幕宽高.
 #define PHONE_WIDTH         [[UIScreen mainScreen] bounds].size.width
@@ -75,6 +76,17 @@ UICollectionViewDelegate
     return cell;
 }
 
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    // 获取图片
+    LBPhotoPickerDetailController *detailVC = [[LBPhotoPickerDetailController alloc] init];
+    detailVC.photoArray = self.dataArray;
+    detailVC.currentIndex = indexPath.row;
+    [self.navigationController pushViewController:detailVC animated:YES];
+    
+
+}
+
 - (void)didClickSelectButton:(UIButton *)button model:(LBPhotoPickerModel *)model{
     
 //    // 处理button 按钮
@@ -133,6 +145,7 @@ UICollectionViewDelegate
     // 处理提示信息
 }
 
+// 更新上传提示信息
 - (void)updateTipText {
     
     if (self.upLoadTipArray.count > 0) {
@@ -148,15 +161,15 @@ UICollectionViewDelegate
                 }else{
                     self.nextTipBtn.enabled = YES;
                 }
-                [self.nextTipBtn setTitle:[NSString stringWithFormat:@"下一步(%zd/%zd)",self.selectedArray.count,self.upLoadTipArray.count] forState:UIControlStateNormal];
+                [self.nextTipBtn setTitle:[NSString stringWithFormat:@"下一步(%zd/%zd)",self.selectedArray.count ,self.upLoadTipArray.count] forState:UIControlStateNormal];
                 break;
                 
             }
         }
     }
-
-
 }
+
+
 
 #pragma mark -lazy
 -(NSMutableArray *)dataArray {

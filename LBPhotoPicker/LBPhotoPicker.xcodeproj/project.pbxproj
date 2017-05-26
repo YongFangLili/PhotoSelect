@@ -20,6 +20,8 @@
 		1CC7E2341ED1A0B200D2C02F /* LBPhotoListViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC7E2331ED1A0B200D2C02F /* LBPhotoListViewCell.m */; };
 		1CC7E2371ED1A0D800D2C02F /* LBPhotoListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC7E2361ED1A0D800D2C02F /* LBPhotoListModel.m */; };
 		1CC7E23A1ED1CDC900D2C02F /* LBPhotoPickerModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC7E2391ED1CDC900D2C02F /* LBPhotoPickerModel.m */; };
+		3D369C161ED7D8D0002ED3A0 /* LBPhotoPickerDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D369C151ED7D8D0002ED3A0 /* LBPhotoPickerDetailController.m */; };
+		3D369C191ED7DB2E002ED3A0 /* LBphotoDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D369C181ED7DB2E002ED3A0 /* LBphotoDetailCell.m */; };
 		3D8961841ED41FE500B63A28 /* LBPhotoPickerViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8961831ED41FE500B63A28 /* LBPhotoPickerViewCell.m */; };
 		3D8961871ED43BF700B63A28 /* LBPhotoSelectTipModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8961861ED43BF700B63A28 /* LBPhotoSelectTipModel.m */; };
 /* End PBXBuildFile section */
@@ -68,6 +70,10 @@
 		1CC7E2361ED1A0D800D2C02F /* LBPhotoListModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBPhotoListModel.m; sourceTree = "<group>"; };
 		1CC7E2381ED1CDC900D2C02F /* LBPhotoPickerModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBPhotoPickerModel.h; sourceTree = "<group>"; };
 		1CC7E2391ED1CDC900D2C02F /* LBPhotoPickerModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBPhotoPickerModel.m; sourceTree = "<group>"; };
+		3D369C141ED7D8D0002ED3A0 /* LBPhotoPickerDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBPhotoPickerDetailController.h; sourceTree = "<group>"; };
+		3D369C151ED7D8D0002ED3A0 /* LBPhotoPickerDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBPhotoPickerDetailController.m; sourceTree = "<group>"; };
+		3D369C171ED7DB2E002ED3A0 /* LBphotoDetailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBphotoDetailCell.h; sourceTree = "<group>"; };
+		3D369C181ED7DB2E002ED3A0 /* LBphotoDetailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBphotoDetailCell.m; sourceTree = "<group>"; };
 		3D8961821ED41FE500B63A28 /* LBPhotoPickerViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBPhotoPickerViewCell.h; sourceTree = "<group>"; };
 		3D8961831ED41FE500B63A28 /* LBPhotoPickerViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBPhotoPickerViewCell.m; sourceTree = "<group>"; };
 		3D8961851ED43BF700B63A28 /* LBPhotoSelectTipModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBPhotoSelectTipModel.h; sourceTree = "<group>"; };
@@ -179,6 +185,10 @@
 				3D8961831ED41FE500B63A28 /* LBPhotoPickerViewCell.m */,
 				3D8961851ED43BF700B63A28 /* LBPhotoSelectTipModel.h */,
 				3D8961861ED43BF700B63A28 /* LBPhotoSelectTipModel.m */,
+				3D369C141ED7D8D0002ED3A0 /* LBPhotoPickerDetailController.h */,
+				3D369C151ED7D8D0002ED3A0 /* LBPhotoPickerDetailController.m */,
+				3D369C171ED7DB2E002ED3A0 /* LBphotoDetailCell.h */,
+				3D369C181ED7DB2E002ED3A0 /* LBphotoDetailCell.m */,
 			);
 			path = LBPhotoPicker;
 			sourceTree = "<group>";
@@ -322,7 +332,9 @@
 				1CC7E1FD1ED195DD00D2C02F /* ViewController.m in Sources */,
 				1CC7E1FA1ED195DD00D2C02F /* AppDelegate.m in Sources */,
 				1CC7E22E1ED199CB00D2C02F /* LBPhotoPickerController.m in Sources */,
+				3D369C191ED7DB2E002ED3A0 /* LBphotoDetailCell.m in Sources */,
 				1CC7E1F71ED195DD00D2C02F /* main.m in Sources */,
+				3D369C161ED7D8D0002ED3A0 /* LBPhotoPickerDetailController.m in Sources */,
 				1CC7E2311ED19F0E00D2C02F /* LBPhotoListViewController.m in Sources */,
 				1CC7E23A1ED1CDC900D2C02F /* LBPhotoPickerModel.m in Sources */,
 				3D8961871ED43BF700B63A28 /* LBPhotoSelectTipModel.m in Sources */,
