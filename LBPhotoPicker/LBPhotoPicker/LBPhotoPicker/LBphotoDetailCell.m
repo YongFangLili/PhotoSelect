@@ -50,11 +50,11 @@
     
         self.photoimageView.image  = model.thumail
         ;
-        PHImageRequestOptions *options = [[PHImageRequestOptions alloc]init];
-        options.synchronous = NO;
-        options.resizeMode = PHImageRequestOptionsResizeModeExact;
-        options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
-        [[PHImageManager defaultManager]requestImageForAsset:model.PHAsset targetSize:CGSizeMake(model.PHAsset.pixelWidth, model.PHAsset.pixelHeight) contentMode:PHImageContentModeAspectFit options:options resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+//        PHImageRequestOptions *options = [[PHImageRequestOptions alloc]init];
+//        options.synchronous = NO;
+//        options.resizeMode = PHImageRequestOptionsResizeModeExact;
+//        options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
+        [[PHImageManager defaultManager]requestImageForAsset:model.PHAsset targetSize:CGSizeMake(model.PHAsset.pixelWidth, model.PHAsset.pixelHeight) contentMode:PHImageContentModeAspectFit options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
             dispatch_async(dispatch_get_global_queue(0, 0), ^{
                 
                 model.originalImage = result;
