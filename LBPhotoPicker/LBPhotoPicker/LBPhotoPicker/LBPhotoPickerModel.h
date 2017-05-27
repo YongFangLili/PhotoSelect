@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <Photos/Photos.h>
 
-@interface LBPhotoPickerModel : NSObject
+@interface LBPhotoPickerModel : NSObject 
 
 /** PHAsset*/
 @property (nonatomic, strong) PHAsset * PHAsset;

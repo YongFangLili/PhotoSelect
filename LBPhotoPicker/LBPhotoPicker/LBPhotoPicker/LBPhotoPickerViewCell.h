@@ -14,12 +14,13 @@
 /**
  * @brief 点击选中按钮状态
  */
-- (void)didClickSelectButton:(UIButton *)button model:(LBPhotoPickerModel *)model;
+- (void)didClickSelectButtonWithcellIndex:(NSInteger)index;
 
 @end
 
 @interface LBPhotoPickerViewCell : UICollectionViewCell
 
+@property (nonatomic, assign) NSInteger cellIndex;
 /** 模型 */
 @property (nonatomic, strong)LBPhotoPickerModel *model;
 /** 代理 */

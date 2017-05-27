@@ -21,13 +21,13 @@ static NSString *kPhotoPickerCellID = @"kPhotoPickerCellID";
 <
 UICollectionViewDataSource,
 LBPhotoPickerViewCellDelegete,
-UICollectionViewDelegate
+UICollectionViewDelegate,
+LBPhotoPickerDetailControllerDelegate
 >
 
 
 /* 图片列表 **/
 @property (nonatomic, strong) UICollectionView *photoCollectionView;
-
 /** 下一步按钮 */
 @property (nonatomic, strong) UIButton *nextTipBtn;
 /** 提示label */
@@ -37,6 +37,8 @@ UICollectionViewDelegate
 
 @property (nonatomic, strong) NSMutableArray *selectedArray;
 
+@property (nonatomic, strong) NSMutableArray *photArray;
+
 @end
 
 @implementation LBPhotoPickerController
@@ -45,6 +47,7 @@ UICollectionViewDelegate
 - (void)viewDidLoad {
     
     [super viewDidLoad];
+    [self initPhotoData];
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.photoCollectionView];
@@ -54,8 +57,20 @@ UICollectionViewDelegate
     self.tipLble.frame = CGRectMake(0,[UIScreen mainScreen].bounds.size.height - 60 - 40 , [UIScreen mainScreen].bounds.size.width, 40);
     self.nextTipBtn.frame = CGRectMake(20, [UIScreen mainScreen].bounds.size.height -10 - 30 , [UIScreen mainScreen].bounds.size.width - 40, 30);
     self.photoCollectionView.frame = CGRectMake(0, 64, PHONE_WIDTH,CGRectGetMinY(self.tipLble.frame) - 64);
+    // 解析数据
+   
     [self updateTipText];
     
+}
+
+- (void)initPhotoData{
+    
+    for (int i = 0 ; i < self.dataArray.count; i++) {
+        PHAsset * asset = (PHAsset *)self.dataArray[i];
+        LBPhotoPickerModel *model = [[LBPhotoPickerModel alloc] init];
+        model.PHAsset = asset;
+        [self.photArray addObject:model];
+    }
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
@@ -65,13 +80,14 @@ UICollectionViewDelegate
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     
-    return self.dataArray.count;
+    return self.photArray.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
 
     LBPhotoPickerViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kPhotoPickerCellID forIndexPath:indexPath];
-    cell.model = self.dataArray[indexPath.row];
+    cell.model = self.photArray[indexPath.row];
+    cell.cellIndex = indexPath.row;
     cell.delegate = self;
     return cell;
 }
@@ -80,65 +96,74 @@ UICollectionViewDelegate
     
     // 获取图片
     LBPhotoPickerDetailController *detailVC = [[LBPhotoPickerDetailController alloc] init];
-    detailVC.photoArray = self.dataArray;
+    detailVC.photoArray = self.photArray;
     detailVC.currentIndex = indexPath.row;
+    detailVC.selectedArray = self.selectedArray;
+    detailVC.upLoadTipArray = self.upLoadTipArray;
+    detailVC.delegate = self;
     [self.navigationController pushViewController:detailVC animated:YES];
+}
+
+// 刷新显示数据
+- (void)didClickSelectPhotoButtonWithCurrentIndex:(NSInteger)currentIndex {
     
+//    // 取当前的cell
+//    if (self.selectedArray.count >= self.upLoadTipArray.count) {
+//        return;
+//    }
+//    LBPhotoPickerViewCell *cell = [self.photoCollectionView dequeueReusableCellWithReuseIdentifier:kPhotoPickerCellID forIndexPath:[NSIndexPath indexPathForRow:currentIndex inSection:0]];
+//    cell.model = self.photArray[currentIndex];
+//    [self.photoCollectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:currentIndex inSection:0]]];
+//    [self updateTipText];
+    [self didClickSelectButtonWithcellIndex:currentIndex];
 
 }
 
-- (void)didClickSelectButton:(UIButton *)button model:(LBPhotoPickerModel *)model{
+- (void)refreshDataWithCurrentIndex:(NSInteger)currentIndex {
     
-//    // 处理button 按钮
-    button.selected = !button.selected;
-//    if (button.selected) { // 选中了，选择图片
-//        self.nextTipModel.isSelected = YES;
-//        model.selected = YES;
-//        model.upLoadIndex = self.nextTipModel.upLoadIndex;
-//        [button setTitle:[NSString stringWithFormat:@"%zd",self.nextTipModel.upLoadIndex] forState:UIControlStateNormal];
-//        button.backgroundColor = [UIColor redColor];
-//        [self.selectedArray addObject:self.nextTipModel];
-//    }else { // 取消选中
-//        
-//        model.selected = NO;
-//        model.upLoadIndex =
-//        
-//        
-//        
-//        
-//    
-//    }
+    // 取当前的cell
+    if (self.selectedArray.count >= self.upLoadTipArray.count) {
+        return;
+    }
+    LBPhotoPickerViewCell *cell = [self.photoCollectionView dequeueReusableCellWithReuseIdentifier:kPhotoPickerCellID forIndexPath:[NSIndexPath indexPathForRow:currentIndex inSection:0]];
+    cell.model = self.photArray[currentIndex];
     
-    for (int i = 0; i < self.upLoadTipArray.count; i ++) {
+    [self.photoCollectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:currentIndex inSection:0]]];
+    [self updateTipText];
+
+}
+
+- (void)didClickSelectButtonWithcellIndex:(NSInteger)index {
+    
+    // 防止越界
+    if ((self.photArray.count -1 ) < index && self.photArray.count == 0) {
+        return;
+    }
+    LBPhotoPickerModel *model = self.photArray[index];
+    for (int i = 0; i < self.upLoadTipArray.count; i++) {
         
         LBPhotoSelectTipModel *tipModel = self.upLoadTipArray[i];
-        if (button.selected) {
+        if (!model.selected) {
             // 遍历未被选中的
             if (!tipModel.isSelected) {
                 tipModel.isSelected = YES;
-                [button setTitle:[NSString stringWithFormat:@"%zd",tipModel.upLoadIndex] forState:UIControlStateNormal];
-                button.backgroundColor = [UIColor redColor];
                 model.selected = YES;
                 model.upLoadIndex = tipModel.upLoadIndex;
                 [self.selectedArray addObject:model];
-                // 刷新一下显示
-                [self updateTipText];
+                [self refreshDataWithCurrentIndex:index];
                 break;
             }
         }else {
-            
             // 找到序号一样并且没有被选中的
-            if ([button.titleLabel.text isEqualToString:[NSString stringWithFormat:@"%zd",tipModel.upLoadIndex]]) {
+            if (model.upLoadIndex == tipModel.upLoadIndex) {
                 tipModel.isSelected = NO;
                 model.upLoadIndex = tipModel.upLoadIndex;
+                model.selected = NO;
                 if (self.selectedArray.count > 0 && [self.selectedArray containsObject:model]) {
                     [self.selectedArray removeObject:model];
+                    [self refreshDataWithCurrentIndex:index];
+                    break;
                 }
-                [button setTitle:@""forState:UIControlStateNormal];
-                button.backgroundColor = [UIColor grayColor];
-                // 刷新一下显示
-                [self updateTipText];
-                break;
             }
         }
     }
@@ -149,6 +174,9 @@ UICollectionViewDelegate
 - (void)updateTipText {
     
     if (self.upLoadTipArray.count > 0) {
+        
+         [self.nextTipBtn setTitle:[NSString stringWithFormat:@"下一步(%zd/%zd)",self.selectedArray.count ,self.upLoadTipArray.count] forState:UIControlStateNormal];
+        
         for (int i = 0; i < self.upLoadTipArray.count; i++ ) {
             
             LBPhotoSelectTipModel *tipMode = self.upLoadTipArray [i];
@@ -161,15 +189,12 @@ UICollectionViewDelegate
                 }else{
                     self.nextTipBtn.enabled = YES;
                 }
-                [self.nextTipBtn setTitle:[NSString stringWithFormat:@"下一步(%zd/%zd)",self.selectedArray.count ,self.upLoadTipArray.count] forState:UIControlStateNormal];
                 break;
                 
             }
         }
     }
 }
-
-
 
 #pragma mark -lazy
 -(NSMutableArray *)dataArray {
@@ -235,6 +260,14 @@ UICollectionViewDelegate
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (NSMutableArray *)photArray {
+    
+    if (!_photArray) {
+        _photArray = [NSMutableArray array];
+    }
+    return _photArray;
 }
 
 

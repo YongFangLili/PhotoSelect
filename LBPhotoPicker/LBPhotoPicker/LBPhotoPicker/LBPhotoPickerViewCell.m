@@ -40,29 +40,30 @@
     self.selectButton.frame = CGRectMake(self.contentView.bounds.size.width - 40, 0, 40,40);
     self.selectButton.backgroundColor = [UIColor grayColor];
 }
+
 - (void)clickSelctButton:(UIButton *)button {
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(didClickSelectButton:model:)]) {
-        [self.delegate didClickSelectButton:button model:self.model];
+    button.selected = !button.selected;
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didClickSelectButtonWithcellIndex:)]) {
+        [self.delegate didClickSelectButtonWithcellIndex:self.cellIndex];
     }
-
 }
 
 - (void)setModel:(LBPhotoPickerModel *)model {
     
     _model = model;
-//    if (model.selected) {
-//        self.selectButton.selected = YES;
-//        self.selectButton.backgroundColor = [UIColor redColor];
-//        [self.selectButton setTitle:[NSString stringWithFormat:@"%zd",model.upLoadIndex] forState:UIControlStateNormal];
-//        
-//    }else{
-//        
-//        self.selectButton.selected = NO;
-//        self.selectButton.backgroundColor = [UIColor grayColor];
-//         [self.selectButton setTitle:@"" forState:UIControlStateNormal];
-//        _model.upLoadIndex = 0;
-//    }
+    if (model.selected) {
+        self.selectButton.selected = YES;
+        self.selectButton.backgroundColor = [UIColor redColor];
+        [self.selectButton setTitle:[NSString stringWithFormat:@"%zd",model.upLoadIndex] forState:UIControlStateNormal];
+        
+    }else{
+        
+        self.selectButton.selected = NO;
+        self.selectButton.backgroundColor = [UIColor grayColor];
+         [self.selectButton setTitle:@"" forState:UIControlStateNormal];
+        _model.upLoadIndex = 0;
+    }
     //创建options
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc]init];
     options.synchronous = NO;

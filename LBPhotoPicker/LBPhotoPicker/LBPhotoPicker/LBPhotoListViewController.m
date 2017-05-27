@@ -90,10 +90,11 @@ static NSString *lbPhotoListViewCellID = @"LBPhotoListViewCellID";
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     LBPhotoPickerController *photoPickerVC = [[LBPhotoPickerController alloc] init];
     LBPhotoListModel *listModel = self.photoArray[indexPath.row];
-    photoPickerVC.dataArray =  listModel.photoPickerArray;
+    
+    photoPickerVC.dataArray =  [listModel.photoPickerArray mutableCopy];
+   ;
     [self initDate];
     photoPickerVC.upLoadTipArray = self.upLoadPhotoModelArrary;
-    
     photoPickerVC.title = listModel.albumName;
     [self.navigationController pushViewController:photoPickerVC animated:YES];
 }
@@ -177,9 +178,9 @@ static NSString *lbPhotoListViewCellID = @"LBPhotoListViewCellID";
             if (asset.mediaType == PHAssetMediaTypeImage) {
                 //  照片
                 pictureNum++;
-                LBPhotoPickerModel *picMode = [[LBPhotoPickerModel alloc] init];
-                picMode.PHAsset = asset;
-                [model.photoPickerArray addObject:picMode];
+//                LBPhotoPickerModel *picMode = [[LBPhotoPickerModel alloc] init];
+//                picMode.PHAsset = asset;
+                [model.photoPickerArray addObject:asset];
                 //                NSDictionary * imageDic = @{@"PHAsset":asset,
                 //                                            @"isPhoto":@(1),
                 //                                            @"albumName":collection.localizedTitle,
@@ -198,7 +199,7 @@ static NSString *lbPhotoListViewCellID = @"LBPhotoListViewCellID";
         // 获取封面
         if (model.photoPickerArray.count > 0) {
             
-            [[PHImageManager defaultManager] requestImageForAsset:[[model.photoPickerArray firstObject] PHAsset] targetSize:CGSizeMake(100, 100) contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+            [[PHImageManager defaultManager] requestImageForAsset:[model.photoPickerArray firstObject] targetSize:CGSizeMake(100, 100) contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
                 model.albumName = collection.localizedTitle;
                 model.coverImage = result;
             }];
