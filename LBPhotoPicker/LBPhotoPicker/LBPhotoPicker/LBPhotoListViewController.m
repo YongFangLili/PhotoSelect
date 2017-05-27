@@ -143,8 +143,6 @@ static NSString *lbPhotoListViewCellID = @"LBPhotoListViewCellID";
         });
         
     });
-    
-    
 }
 
 /**
@@ -155,9 +153,6 @@ static NSString *lbPhotoListViewCellID = @"LBPhotoListViewCellID";
     PHFetchOptions *option = [[PHFetchOptions alloc]init];
     option.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"modificationDate" ascending:NO]];
     PHFetchResult *assets = [PHAsset fetchAssetsInAssetCollection:collection options:option];
-    
-    NSMutableArray *tempPhotoImageArray = [NSMutableArray array];
-    
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc]init];
     options.synchronous = YES;
     options.resizeMode = PHImageRequestOptionsResizeModeExact;
@@ -178,24 +173,11 @@ static NSString *lbPhotoListViewCellID = @"LBPhotoListViewCellID";
             if (asset.mediaType == PHAssetMediaTypeImage) {
                 //  照片
                 pictureNum++;
-//                LBPhotoPickerModel *picMode = [[LBPhotoPickerModel alloc] init];
-//                picMode.PHAsset = asset;
                 [model.photoPickerArray addObject:asset];
-                //                NSDictionary * imageDic = @{@"PHAsset":asset,
-                //                                            @"isPhoto":@(1),
-                //                                            @"albumName":collection.localizedTitle,
-                //                                            @"stringMediaName":photoName,
-                //                                            @"extendName":extrendName};
-                //
-                //                MDPMediaSourceModel * model = [MDPMediaSourceModel initWithDictionary:imageDic];
-                //                [tempPhotoImageArray addObject:model];
-                
             }
             
             model.pictureNumber  = [NSString stringWithFormat:@"%zd",pictureNum];
         }
-        
-        
         // 获取封面
         if (model.photoPickerArray.count > 0) {
             
@@ -208,57 +190,12 @@ static NSString *lbPhotoListViewCellID = @"LBPhotoListViewCellID";
             }else{
                 [self.photoArray addObject:model];
             }
-            
         }
-        
-        
-        
-        
-        //        if (tempPhotoImageArray && tempPhotoImageArray.count >0) {
-        //            /// 添加图片相册的封面属性，数量等.
-        //            [[PHImageManager defaultManager]requestImageForAsset:[[tempPhotoImageArray firstObject] PHAsset] targetSize:CGSizeMake(100, 100) contentMode:PHImageContentModeAspectFill options:options resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-        /**
-         *
-         *  @param      albumName --->相册名字.
-         *  @param      postImage --->相册封面.
-         *  @param      pictureNumber --->相册图片数目.
-         *  @param      hasSelected ----->是否有选中的资源.
-         *
-         */
-        
-        //                MDPMediaClassifyModel * model = [[MDPMediaClassifyModel alloc] init];
-        //                model.albumName = collection.localizedTitle;
-        //                model.assetCollectionSubtype = [NSString stringWithFormat:@"%zd",collection.assetCollectionSubtype];
-        //                model.postImage = result;
-        //                model.pictureNumber = [tempPhotoImageArray count];
-        //                model.hasSelected = NO;
-        
-        //                [self.albumNamePictureArray addObject:model];
-        //            }];
-        
-        //            [self.photoImageArray addObject:tempPhotoImageArray];
-        //        }
-        
-        if (collection.assetCollectionSubtype == PHAssetCollectionSubtypeSmartAlbumUserLibrary) {
-            
-            //            self.allPhotoArray = tempPhotoImageArray;
-        }
+
     }
 }
 
-
-
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    
-    if (buttonIndex == 0) {
-        // 否
-    }else {
-        
-        // 跳转
-    }
-}
-
+#pragma mark- lazy
 - (UITableView *)photoListTableView {
     
     if (!_photoListTableView) {

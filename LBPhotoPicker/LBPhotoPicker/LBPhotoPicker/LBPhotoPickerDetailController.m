@@ -147,9 +147,7 @@ UIScrollViewDelegate
         for (int i = 0; i < self.upLoadTipArray.count; i++ ) {
             
             LBPhotoSelectTipModel *tipMode = self.upLoadTipArray [i];
-            
             if (tipMode.isSelected == NO) {
-    
                 self.tipLble.text = [NSString stringWithFormat:@"请选择%@",tipMode.tipText];
                 if (self.selectedArray.count == 0) {
                     self.nextTipBtn.enabled = NO;

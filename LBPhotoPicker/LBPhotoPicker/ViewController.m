@@ -18,8 +18,10 @@
 
 @interface ViewController ()<UIAlertViewDelegate>
 
+/** 选中button */
 @property (nonatomic, strong) UIButton *selectButton;
 
+/** 相册列表array */
 @property (nonatomic, strong) NSMutableArray *photoListArrary;
 
 /** 上传提示数组  这部分需要外界控制*/
@@ -42,30 +44,17 @@
     
     [self.upLoadTipArray removeAllObjects];
     for (int i = 0; i < 5; i ++) {
-        
-//        LBPhotoSelectTipModel *model = [[LBPhotoSelectTipModel alloc] init];
-//        model.upLoadIndex = i + 1;
         NSString *tipString = [NSString stringWithFormat:@"请上传证件照 %zd",i + 1];
         [self.upLoadTipArray addObject:tipString];
     }
 }
-
 
 - (void)selectButtonClick:(UIButton *)button {
     
     [self checkPermissionForPhotoLibrary];
 }
 
-- (UIButton *)selectButton {
-    
-    if (!_selectButton) {
-        _selectButton = [[UIButton alloc] init];
-        _selectButton.backgroundColor = [UIColor redColor];
-        [_selectButton setTitle:@"选择相册" forState:UIControlStateNormal];
-        [_selectButton addTarget:self action:@selector(selectButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _selectButton;
-}
+
 
 - (void)checkPermissionForPhotoLibrary {
     
@@ -91,27 +80,21 @@
     
     // 跳转
     LBPhotoListViewController *lbListVC = [[LBPhotoListViewController alloc] init];
-//    [self initDate];
     lbListVC.upLoadTipArray = self.upLoadTipArray;
     [self.navigationController pushViewController:lbListVC animated:YES];
 }
 
+#pragma mark -lazy
 
-
-
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+- (UIButton *)selectButton {
     
-    if (buttonIndex == 0) {
-        // 否
-    }else {
-        
-        // 跳转
-        [self pushToPhotpListVC];
-        
-
+    if (!_selectButton) {
+        _selectButton = [[UIButton alloc] init];
+        _selectButton.backgroundColor = [UIColor redColor];
+        [_selectButton setTitle:@"选择相册" forState:UIControlStateNormal];
+        [_selectButton addTarget:self action:@selector(selectButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
-
+    return _selectButton;
 }
 
 - (NSMutableArray *)photoListArrary {
@@ -127,9 +110,7 @@
     if (!_upLoadTipArray) {
         _upLoadTipArray = [NSMutableArray array];
     }
-    
     return _upLoadTipArray;
-
 }
 
 

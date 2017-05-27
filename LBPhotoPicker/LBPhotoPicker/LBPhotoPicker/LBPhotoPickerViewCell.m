@@ -84,12 +84,7 @@
     
     if (!model.originalImage) {
         
-        [[PHImageManager defaultManager]requestImageForAsset:model.PHAsset targetSize:CGSizeMake(model.PHAsset.pixelWidth, model.PHAsset.pixelHeight) contentMode:PHImageContentModeAspectFit options:options resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-            dispatch_async(dispatch_get_global_queue(0, 0), ^{
-                
-                model.originalImage = result;
-            });
-        }];
+        
     }
 }
 
